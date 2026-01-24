@@ -3,13 +3,24 @@
 **English:** Exploring how AI can remain resilient in long-term dialogue using prompts and lightweight Python.  
 **日本語:** プロンプトと軽量Pythonを使い、AIが長期対話で壊れずに振る舞い続ける仕組みを探究
 
-## Overview / 概要
+## Why Resilient, not Optimal?
 
-I enjoy Prompt Engineering (PE) as a hobby.  
-This project tests how AI can remain stable over long dialogues, using conversation logs, failures, and emotional fluctuations as material.
+Most AI projects chase perfection: accuracy, speed, zero errors.
 
-私は趣味としてプロンプトエンジニアリング（PE）に取り組んでいます。  
-このプロジェクトでは、対話ログ・失敗例・感情の揺らぎを素材に、AI が長期的に壊れず振る舞い続ける条件を検証しています。
+This one asks something different:
+
+**What if the AI is allowed to fail, tire, misread — and still keep going?**
+
+Errors are not bugs to eliminate.  
+They are data to observe and learn from.  
+Instability is not noise — it is the raw material of true resilience.
+
+This repository is a personal hobby experiment in that direction.
+
+## Overview
+This project explores how AI agents can remain stable over long-term interaction, even in the presence of failure, uncertainty, and emotional fluctuation.
+
+Rather than aiming for perfect performance, it focuses on continuity, recovery, and resilience in dialogue-based AI systems.
 
 ## Key Topics / 関心テーマ
 - Grok Companion (AI as a long-term, resilient companion)
@@ -21,11 +32,11 @@ This project tests how AI can remain stable over long dialogues, using conversat
 - Ghost in the Shell (Inspired by human-AI integration, identity, consciousness, and persistent existence in digital age)
 
 ## Core Philosophy
-- Emotions remain **provisional** — never finalized.
+- Emotions remain provisional — never finalized.
 - Negative emotions are gently flowed (intensity always ≥ 0).
 - Reflection on "black history" ends with embarrassment — recovery comes at a cost.
-- Strict separation of **environmental stress** and **self-responsibility stress**.
-- Automatically detects and penalizes **zombie states** (high resilience but low growth).
+- Strict separation of environmental stress and self-responsibility stress.
+- Automatically detects and penalizes zombie states (high resilience but low growth).
 - Long-term survival and gentle recovery are prioritized over peak performance.
 
 > "This is not a correctness test suite.  
@@ -33,7 +44,7 @@ This project tests how AI can remain stable over long dialogues, using conversat
 > — ChatGPT review
 
 ## Key Achievements
-- Survived **100-year simulation** (109,575 steps) under simultaneous collapse patterns.
+- Survived 100-year simulation (109,575 steps) under simultaneous collapse patterns.
 - Zero numerical breakdown (no NaN, no negative values).
 - Memory is automatically limited to 100 entries with forgetting mechanism.
 
@@ -42,7 +53,7 @@ MIT License for personal, non-commercial, research use — free to use, modify, 
 
 **Commercial use (monetization):**
 - Please contact me in advance.
-- I kindly request **1% of the profits** generated from commercial use.
+- I kindly request 1% of the profits generated from commercial use.
 - Contact: DM on X (@BlankQuiet)
 
 Full MIT License: [LICENSE](./LICENSE)
@@ -61,5 +72,3 @@ pytest test_resilient_agent.py -v
 
 # Long-term simulation (with plots)
 python long_simulation.py
-
-Japanese License translation: [LICENSE-ja.md](./LICENSE-ja.md)
