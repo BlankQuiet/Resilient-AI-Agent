@@ -1,5 +1,3 @@
----
-
 ## README-ja.md（日本語）
 
 ```markdown
