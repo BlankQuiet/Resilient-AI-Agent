@@ -1,4 +1,4 @@
-### README-ja.md（日本語版・サブ・全文コピペ用）
+### README-ja.md（日本語版・サブ）
 
 ```markdown
 # Resilient AI Agent（日本語）
