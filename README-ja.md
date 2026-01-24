@@ -1,19 +1,28 @@
-
-### README-ja.md（日本語版・サブ）
+### README-ja.md（日本語版・サブ・全文コピペ用）
 
 ```markdown
-# Resilient-AI-Agent
+# Resilient AI Agent（日本語）
 
-**日本語:** プロンプトと軽量Pythonを使い、AIが長期対話で壊れずに振る舞い続ける仕組みを探究  
-**English:** Exploring how AI can remain resilient in long-term dialogue using prompts and lightweight Python
+## なぜ「最適化」ではなく「レジリエンス」なのか
 
-## 概要 (Overview)
+ほとんどのAIプロジェクトは「正しく・速く・間違えない」ことを目指します。
+
+このプロジェクトは違う問いを立てています。
+
+**「間違えても、疲れても、完全に理解できなくても、続けられるAIってどんなものだろう？」**
+
+エラーは消すべき欠陥ではなく、観測すべき現象です。  
+揺らぎはノイズではなく、設計の素材です。
+
+「壊れないこと」そのものを、設計の中心に据えています。
+
+## 概要
 
 私は趣味としてプロンプトエンジニアリング（PE）に取り組んでいます。  
 このプロジェクトでは、対話ログ・失敗例・感情の揺らぎを素材に、AI が長期的に壊れず振る舞い続ける条件を検証しています。
 
 ## 関心テーマ (Key Topics)
-- Grok Companion（長期対話可能なAI相棒）
+- Grok Companion（Grokに着想を得た長期対話可能なAI相棒）
 - AI と心理学（人間らしい感情回復・耐久モデリング）
 - 長期対話における破綻回避（回復・忘却・疲労の扱い）
 - プロンプト単体での安全柵・設計思想の表現
@@ -73,5 +82,3 @@ pip install -r requirements.txt
 python agent.py               # 基本動作
 pytest test_resilient_agent.py # 全テスト
 python long_simulation.py     # 長期シミュレーション
-
-Japanese License translation: [LICENSE-ja.md](./LICENSE-ja.md)
