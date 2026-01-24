@@ -1,74 +1,100 @@
 # Resilient-AI-Agent
 
-**English:** Exploring how AI can remain resilient in long-term dialogue using prompts and lightweight Python.  
-**日本語:** プロンプトと軽量Pythonを使い、AIが長期対話で壊れずに振る舞い続ける仕組みを探究
+Exploring how AI can remain resilient in long-term dialogue using prompts and lightweight Python.  
+This project focuses on survivability, recovery, and continuity rather than optimal performance.
+
+---
 
 ## Why Resilient, not Optimal?
 
 Most AI projects chase perfection: accuracy, speed, zero errors.
 
-This one asks something different:
+This project asks a different question:
 
-**What if the AI is allowed to fail, tire, misread — and still keep going?**
+**What if an AI is allowed to fail, tire, misread — and still keep going?**
 
 Errors are not bugs to eliminate.  
-They are data to observe and learn from.  
-Instability is not noise — it is the raw material of true resilience.
+They are signals to observe.  
+Instability is not noise — it is the raw material of resilience.
 
-This repository is a personal hobby experiment in that direction.
+This repository is a personal hobby and research experiment in that direction.
+
+---
 
 ## Overview
-This project explores how AI agents can remain stable over long-term interaction, even in the presence of failure, uncertainty, and emotional fluctuation.
 
-Rather than aiming for perfect performance, it focuses on continuity, recovery, and resilience in dialogue-based AI systems.
+This project explores how AI agents can remain stable over long-term interaction,  
+even in the presence of failure, uncertainty, emotional fluctuation, and partial misunderstanding.
 
-## Key Topics / 関心テーマ
-- Grok Companion (AI as a long-term, resilient companion)
-- AI & Psychology (Modeling human-like emotional resilience and recovery)
-- Breakdown Prevention in Long-term Dialogues (Handling recovery, forgetting, fatigue)
-- Prompt-Level Safety Guards (Design philosophy expressed through prompts alone)
-- Iterative Prototyping from Smartphone/PC Copy-Paste (Start simple, improve through repetition)
-- Gundam (Inspired by themes of resilience, human-machine coexistence, and long-term survival)
-- Ghost in the Shell (Inspired by human-AI integration, identity, consciousness, and persistent existence in digital age)
+Rather than optimizing for peak performance, it prioritizes:
+- continuity
+- recovery
+- graceful degradation
+- psychological safety in dialogue systems
+
+---
+
+## Key Topics
+
+- Resilient AI Agents
+- Long-term dialogue stability
+- Prompt-based safety and recovery design
+- Forgetting, fatigue, and recovery modeling
+- Lightweight Python prototyping
+- Human–AI coexistence themes (inspired by *Gundam* and *Ghost in the Shell*)
+
+---
 
 ## Core Philosophy
-- Emotions remain provisional — never finalized.
-- Negative emotions are gently flowed (intensity always ≥ 0).
-- Reflection on "black history" ends with embarrassment — recovery comes at a cost.
-- Strict separation of environmental stress and self-responsibility stress.
-- Automatically detects and penalizes zombie states (high resilience but low growth).
-- Long-term survival and gentle recovery are prioritized over peak performance.
 
-> "This is not a correctness test suite.  
-> It is a survivability and psychological safety test suite."  
-> — ChatGPT review
+- Emotions are always provisional, never finalized
+- Negative states are softened, not amplified
+- Environmental stress and self-responsibility stress are strictly separated
+- Zombie states (stable but non-growing) are automatically detected and penalized
+- Long-term survival is valued over short-term optimization
 
-## Key Achievements
-- Survived 100-year simulation (109,575 steps) under simultaneous collapse patterns.
-- Zero numerical breakdown (no NaN, no negative values).
-- Memory is automatically limited to 100 entries with forgetting mechanism.
+> “This is not a correctness test suite.  
+> It is a survivability and psychological safety test suite.”
 
-## License & Usage Terms
-MIT License for personal, non-commercial, research use — free to use, modify, distribute.
+---
 
-**Commercial use (monetization):**
-- Please contact me in advance.
-- I kindly request 1% of the profits generated from commercial use.
-- Contact: DM on X (@BlankQuiet)
+## Achievements
 
-Full MIT License: [LICENSE](./LICENSE)
+- Completed a 100-year simulation (100k+ steps) without numerical collapse
+- No NaN or invalid values observed
+- Memory is automatically limited with a forgetting mechanism
+
+---
+
+## License & Commercial Use
+
+This project is released under the MIT License.
+
+- Personal, non-commercial, and research use: **free**
+- Modification and redistribution: **allowed under MIT terms**
+
+### Commercial Use
+
+If you wish to use this project for commercial or monetized purposes,  
+please contact me in advance.
+
+- Terms are discussed **case by case**
+- As a general reference, a **low single-digit revenue share (around 5%)**
+  may apply depending on usage and level of involvement
+
+This is intended to keep collaboration fair and sustainable.
+
+**Contact:**  
+DM on X (Twitter): **@BlankQuiet**
+
+Full license text: [LICENSE](./LICENSE)
+
+---
 
 ## Quick Start
 
 ```bash
-# Install dependencies
 pip install -r requirements.txt
-
-# Basic run
 python agent.py
-
-# Run all tests
-pytest test_resilient_agent.py -v
-
-# Long-term simulation (with plots)
+pytest test_resilient_agent.py
 python long_simulation.py
