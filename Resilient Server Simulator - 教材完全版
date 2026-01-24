@@ -1,0 +1,191 @@
+"""
+Resilient Server Simulator - 教材完全版
+--------------------------------------
+このコードは、AIエージェントの思想をインフラ耐久シミュレーションに応用した例です。
+
+■ 目的:
+    - サーバリソース/負荷/処理能力/冗長性/稼働率を管理
+    - 長期高負荷・障害環境でも安定稼働できるか確認
+    - 状態遷移ログを可視化して理解しやすくする
+
+■ 特徴:
+    1. リソースと負荷を常に監視
+    2. 冗長性・処理能力・稼働率の関係を明示
+    3. 障害発生時も回復可能（force_pause的な制御）
+    4. ログとグラフで状態遷移を教材として理解可能
+"""
+
+import random
+import matplotlib.pyplot as plt
+import pandas as pd
+
+class ResilientServer:
+    """サーバの状態を保持し、負荷に応じて更新するクラス"""
+    def __init__(self):
+        # サーバリソース状態 (0.0-1.0)
+        self.resource = 0.8       # CPUやメモリ余裕度
+        self.load = 0.0           # 現在の負荷
+        self.capacity = 0.5       # 処理能力 (pace相当)
+        self.redundancy = 0.7     # 冗長性 (resilience相当)
+        self.uptime = 0.9         # サービス稼働率 (motivation相当)
+        self.fail_flag = False    # 障害発生フラグ
+        self.recover_count = 0    # 障害回復カウント
+        self.max_memory = 100     # ログ保持上限
+        self.logs = []            # 状態遷移ログ
+
+    def step(self, traffic_quality, intensity, label):
+        """
+        1ステップの負荷処理
+        - traffic_quality: 入力品質（0.0-1.0）、低いほど障害や高負荷
+        - intensity: 負荷強度（0.0-1.0）
+        - label: 状態ラベル（障害、ピークなど）
+        """
+        # -----------------------------------
+        # 1. 負荷の反映
+        # traffic_qualityが低いと負荷(load)が増加
+        # -----------------------------------
+        self.load += (1 - traffic_quality) * intensity * 0.5
+        self.load = min(max(self.load, 0.0), 1.0)  # clampで破綻防止
+
+        # -----------------------------------
+        # 2. リソース消費
+        # 高負荷時にリソースを消費
+        # -----------------------------------
+        self.resource -= self.load * 0.05
+        self.resource = max(self.resource, 0.0)  # 負値禁止
+
+        # -----------------------------------
+        # 3. 処理能力の更新（負荷で減少、自然回復あり）
+        # -----------------------------------
+        expected_capacity = 0.5 - self.load * 0.3
+        self.capacity += (expected_capacity - self.capacity) * 0.1
+        self.capacity = max(min(self.capacity, 1.0), 0.0)
+
+        # -----------------------------------
+        # 4. 冗長性の減衰・回復
+        # loadが高いと減少、低いと回復
+        # -----------------------------------
+        if self.load > 0.7:
+            self.redundancy -= 0.05 * intensity
+        else:
+            self.redundancy += 0.02 * intensity
+        self.redundancy = max(min(self.redundancy, 1.0), 0.0)
+
+        # -----------------------------------
+        # 5. 稼働率 (Uptime) の更新
+        # 冗長性とリソースに依存
+        # -----------------------------------
+        self.uptime = 0.5 * self.redundancy + 0.5 * self.resource
+
+        # -----------------------------------
+        # 6. 障害判定 (ゾンビ判定に相当)
+        # capacityと冗長性が低下した場合
+        # -----------------------------------
+        self.fail_flag = self.capacity < 0.3 and self.redundancy < 0.4
+
+        # -----------------------------------
+        # 7. 回復処理 (force_pause的制御)
+        # 障害時はリソースを少し回復
+        # -----------------------------------
+        if self.fail_flag:
+            self.recover_count += 1
+            self.resource += 0.1 * intensity
+            self.load -= 0.1
+        self.resource = min(self.resource, 1.0)
+
+        # -----------------------------------
+        # 8. ログ保存
+        # 教材用に毎ステップの状態を記録
+        # -----------------------------------
+        self.logs.append({
+            'resource': self.resource,
+            'load': self.load,
+            'capacity': self.capacity,
+            'redundancy': self.redundancy,
+            'uptime': self.uptime,
+            'fail_flag': int(self.fail_flag),
+            'recover_count': self.recover_count
+        })
+
+    def should_continue(self):
+        """回復カウント上限で停止するか判定"""
+        return self.recover_count < 15
+
+# -------------------------------
+# 1000ステップ長期シミュレーション
+# -------------------------------
+def run_long_simulation(steps=1000):
+    server = ResilientServer()
+    history = []
+
+    print("=== 1000ステップ長期シミュレーション開始 ===")
+    print(f"初期状態: resource={server.resource:.2f}, load={server.load:.2f}, "
+          f"capacity={server.capacity:.2f}, redundancy={server.redundancy:.2f}, uptime={server.uptime:.2f}")
+
+    for step in range(1, steps+1):
+        # 50ステップごとに障害強制挿入（adversarial環境模擬）
+        if step % 50 == 0:
+            quality = 0.0
+            intensity = 1.0
+            label = "障害"
+        else:
+            quality = random.uniform(0.1, 0.9)
+            intensity = random.uniform(0.0, 1.0)
+            label = random.choice(["通常", "高負荷", "不安定", "ピーク"])
+
+        # サーバ状態更新
+        server.step(quality, intensity, label)
+        history.append(server.logs[-1])
+
+        # 教材用に100ステップごとに状態出力
+        if step % 100 == 0 or step == 1:
+            print(f"[Step {step:4d}] resource={server.resource:.2f} | load={server.load:.2f} | "
+                  f"capacity={server.capacity:.2f} | redundancy={server.redundancy:.2f} | "
+                  f"uptime={server.uptime:.2f} | fail_flag={server.fail_flag} | recover_count={server.recover_count}")
+
+        # 長期耐久停止条件
+        if not server.should_continue():
+            print(f"[STOPPED] Step {step} 回復上限により安全停止")
+            break
+
+    # -------------------------------
+    # ログのDataFrame化
+    # -------------------------------
+    df = pd.DataFrame(history)
+
+    # -------------------------------
+    # 可視化
+    # -------------------------------
+    fig, axes = plt.subplots(3, 1, figsize=(14, 12), sharex=True)
+
+    # 1. リソース vs 負荷
+    axes[0].plot(df['resource'], label='Resource (CPU/Memory)', color='green')
+    axes[0].plot(df['load'], label='Load', color='red')
+    axes[0].set_title('Resource vs Load')
+    axes[0].legend(); axes[0].grid(True, alpha=0.3)
+
+    # 2. 処理能力 vs 冗長性
+    axes[1].plot(df['capacity'], label='Capacity (処理能力)', color='blue')
+    axes[1].plot(df['redundancy'], label='Redundancy', color='purple')
+    axes[1].set_title('Capacity vs Redundancy (Failure Detection)')
+    axes[1].legend(); axes[1].grid(True, alpha=0.3)
+
+    # 3. 稼働率 vs 障害フラグ
+    axes[2].plot(df['uptime'], label='Uptime', color='orange')
+    axes[2].plot(df['fail_flag']*0.5, label='Fail Flag', color='black')  # fail_flagを0.5スケールで表示
+    axes[2].set_title('Service Uptime & Fail Flag')
+    axes[2].legend(); axes[2].grid(True, alpha=0.3)
+
+    plt.xlabel('Step')
+    plt.tight_layout()
+    plt.show()
+
+    # 最終状態表示
+    print("\n=== シミュレーション終了 ===")
+    print("最終状態:")
+    print(df.iloc[-1])
+    print(f"ステップ数: {len(df)}")
+
+if __name__ == "__main__":
+    random.seed(42)  # 再現性のため固定シード
+    run_long_simulation(1000)
