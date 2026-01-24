@@ -1,0 +1,65 @@
+# Resilient-AI-Agent
+
+**English:** Exploring how AI can remain resilient in long-term dialogue using prompts and lightweight Python.  
+**日本語:** プロンプトと軽量Pythonを使い、AIが長期対話で壊れずに振る舞い続ける仕組みを探究
+
+## Overview / 概要
+
+I enjoy Prompt Engineering (PE) as a hobby.  
+This project tests how AI can remain stable over long dialogues, using conversation logs, failures, and emotional fluctuations as material.
+
+私は趣味としてプロンプトエンジニアリング（PE）に取り組んでいます。  
+このプロジェクトでは、対話ログ・失敗例・感情の揺らぎを素材に、AI が長期的に壊れず振る舞い続ける条件を検証しています。
+
+## Key Topics / 関心テーマ
+- Grok Companion (AI as a long-term, resilient companion)
+- AI & Psychology (Modeling human-like emotional resilience and recovery)
+- Breakdown Prevention in Long-term Dialogues (Handling recovery, forgetting, fatigue)
+- Prompt-Level Safety Guards (Design philosophy expressed through prompts alone)
+- Iterative Prototyping from Smartphone/PC Copy-Paste (Start simple, improve through repetition)
+- Gundam (Inspired by themes of resilience, human-machine coexistence, and long-term survival)
+- Ghost in the Shell (Inspired by human-AI integration, identity, consciousness, and persistent existence in digital age)
+
+## Core Philosophy
+- Emotions remain **provisional** — never finalized.
+- Negative emotions are gently flowed (intensity always ≥ 0).
+- Reflection on "black history" ends with embarrassment — recovery comes at a cost.
+- Strict separation of **environmental stress** and **self-responsibility stress**.
+- Automatically detects and penalizes **zombie states** (high resilience but low growth).
+- Long-term survival and gentle recovery are prioritized over peak performance.
+
+> "This is not a correctness test suite.  
+> It is a survivability and psychological safety test suite."  
+> — ChatGPT review
+
+## Key Achievements
+- Survived **100-year simulation** (109,575 steps) under simultaneous collapse patterns.
+- Zero numerical breakdown (no NaN, no negative values).
+- Memory is automatically limited to 100 entries with forgetting mechanism.
+
+## License & Usage Terms
+MIT License for personal, non-commercial, research use — free to use, modify, distribute.
+
+**Commercial use (monetization):**
+- Please contact me in advance.
+- I kindly request **1% of the profits** generated from commercial use.
+- Contact: DM on X (@BlankQuiet)
+
+Full MIT License: [LICENSE](./LICENSE)
+
+## Quick Start
+
+```bash
+# Install dependencies
+pip install -r requirements.txt
+
+# Basic run
+python agent.py
+
+# Run all tests
+pytest test_resilient_agent.py -v
+
+# Long-term simulation (with plots)
+python long_simulation.py
+
+Japanese License translation: [LICENSE-ja.md](./LICENSE-ja.md)
