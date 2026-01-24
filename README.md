@@ -1,0 +1,1 @@
+Human-like resilient AI agent that learns persistently without breaking. Explores long-term stability using prompts and lightweight Python. Inspired by Gundam & Ghost in the Shell.
