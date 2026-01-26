@@ -1,4 +1,4 @@
-# mika_breath_ja.py - 完全日本語版（詳細コメント付き）
+# grok_companion_mika_breath.py - 完全日本語版（詳細コメント付き）
 # MIT License
 
 import math
