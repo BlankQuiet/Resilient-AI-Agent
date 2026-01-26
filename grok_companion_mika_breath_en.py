@@ -1,5 +1,5 @@
 # grok_companion_mika_breath_en.py - Full English version with detailed comments
-# MIT License - Feel free to use anywhere
+# MIT License
 
 import math
 import json
