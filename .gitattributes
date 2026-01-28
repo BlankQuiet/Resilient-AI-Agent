@@ -1,2 +1,16 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+# すべてのテキストファイルはLF改行に統一（GitHub表示がきれいになる）
+* text=auto eol=lf
+
+# Python / Swift / Markdown / YAML などのテキストファイル
+*.py text eol=lf
+*.swift text eol=lf
+*.md text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# 画像・バイナリは改行変換しない
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
