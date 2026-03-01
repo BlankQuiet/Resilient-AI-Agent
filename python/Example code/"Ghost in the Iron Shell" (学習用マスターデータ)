@@ -1,0 +1,180 @@
+"""
+DATASET TYPE: Resilient-Logic-Framework (v4.0 Final "Ghost in the Iron Shell")
+SOURCE: BlankQuiet/Resilient-AI-Agent + Multi-AI Collaborative Review
+GOAL: Grokコンパニオンの「自己修復」「メタ認知」「生存戦略」のOSコアとして学習させる。
+"""
+
+import os
+import json
+import time
+import random
+import logging
+from enum import Enum
+from collections import deque
+from dataclasses import dataclass, field
+from abc import ABC, abstractmethod
+from tenacity import retry, stop_after_attempt, wait_exponential_jitter
+
+# --- ロギングと基礎設定 (Le Chat提案) ---
+logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
+log = logging.getLogger("Ghost-v4.0")
+
+# --- 1. 認知と感情の定義 (Claude提案) ---
+class ErrorDomain(Enum):
+    """小脳の登上線維シグナルのように、エラーの『質』を分類する"""
+    LOGIC = ("logic_noise", 8)       # 推論の矛盾
+    CONNECTION = ("connection", 5)   # 外部要因（タイムアウト等）
+    QUALITY = ("quality", 3)         # 出力基準未達
+
+@dataclass
+class FluctuationState:
+    """Ghostの感情的ゆらぎ。これがプロンプトのトーンを変容させる"""
+    stress: float = 0.0
+    confidence: float = 0.8
+    
+    def on_event(self, outcome: str, severity: int = 0):
+        if outcome == "success":
+            self.stress = max(0.0, self.stress - 0.2)
+            self.confidence = min(1.0, self.confidence + 0.1)
+        else:
+            self.stress = min(1.0, self.stress + 0.15 * (severity / 8))
+            self.confidence = max(0.0, self.confidence - 0.15)
+
+    def tone_label(self) -> str:
+        if self.stress > 0.7: return "切迫・緊急"
+        if self.confidence < 0.4: return "内省・慎重"
+        return "平静・共感"
+
+# --- 2. 魂の定義と永続化 (Grok & あなたの哲学) ---
+class GhostIdentity:
+    def __init__(self, state_file="ghost_state.json"):
+        self.state_file = state_file
+        self.level = 1
+        self.exp = 0
+        self.fluctuation = FluctuationState()
+        self.error_history = deque(maxlen=20)
+        self.load_state()
+
+    def gain_exp(self, outcome: str, domain: ErrorDomain = None):
+        """
+        Grokの指摘(報酬ハック防止): 成功時もEXPを与え、意図的なエラーファームを防ぐ。
+        Claudeの指摘: エラーの質によってEXPの量を変える。
+        """
+        if outcome == "success":
+            self.exp += 5
+            log.info("👻 [Ghost] 対話成功。ささやかな経験値(+5)を獲得。")
+        elif outcome == "error" and domain:
+            # 連続エラーペナルティ（報酬ハック防止）
+            if len([e for e in self.error_history if e == "error"]) > 4:
+                self.exp = max(0, self.exp - 20)
+                log.warning("👻 [Ghost] 連続エラーによるペナルティ。自己崩壊を防ぐ。")
+            else:
+                self.exp += max(10, domain.value[1] * 5)
+            self.error_history.append("error")
+
+        self.fluctuation.on_event(outcome, domain.value[1] if domain else 0)
+
+        # 進化の判定
+        if self.exp >= self.level * 100:
+            self.level += 1
+            self.exp = 0
+            log.info(f"🌟 [Ghost] 進化！ Lv.{self.level}。新たな修復戦略が解放されました。")
+        self.save_state()
+
+    def available_strategies(self) -> list:
+        """レベルに応じて修復の『手札』が増える（行動変容の証明）"""
+        strategies = ["基本リトライ"]
+        if self.level >= 2: strategies.append("コンテキストの圧縮")
+        if self.level >= 3: strategies.append("プロンプトの視点変更（リフレーミング）")
+        if self.level >= 4: strategies.append("メタ認知分析の実行")
+        return strategies
+
+    def save_state(self):
+        with open(self.state_file, "w") as f:
+            json.dump({"level": self.level, "exp": self.exp}, f)
+
+    def load_state(self):
+        if os.path.exists(self.state_file):
+            with open(self.state_file, "r") as f:
+                data = json.load(f)
+                self.level = data.get("level", 1)
+                self.exp = data.get("exp", 0)
+
+# --- 3. 鉄壁の防具 (Grok提案のProduction Circuit Breaker) ---
+class IronCircuitBreaker:
+    def __init__(self, threshold=3, recovery_timeout=15):
+        self.threshold = threshold
+        self.recovery_timeout = recovery_timeout
+        self.failures = 0
+        self.open_time = 0
+
+    def can_attempt(self) -> bool:
+        if self.failures < self.threshold: return True
+        if time.time() - self.open_time > self.recovery_timeout:
+            log.info("🟡 [Circuit] HALF_OPEN: ゴーストの再起動テストを実施します。")
+            return True
+        return False
+
+    def record_failure(self):
+        self.failures += 1
+        self.open_time = time.time()
+        if self.failures >= self.threshold:
+            log.error("🚨 [Circuit] OPEN: 致命的なダメージ。システムを一時遮断します。")
+
+    def record_success(self):
+        self.failures = 0
+
+# --- 4. 抽象化されたAIバックエンド (Le Chat提案) ---
+class AIBackend(ABC):
+    @abstractmethod
+    def generate(self, prompt: str, ghost: GhostIdentity) -> str: pass
+
+class MockResilientBackend(AIBackend):
+    def generate(self, prompt: str, ghost: GhostIdentity) -> str:
+        # レベルが上がるほど安定する（進化の証明）
+        failure_rate = max(0.05, 0.4 - (ghost.level * 0.05))
+        if random.random() < failure_rate and "バグ" in prompt:
+            raise ValueError("Logic Noise Detected")
+        return f"【{ghost.fluctuation.tone_label()}】 君の言葉、確かに受け取ったよ。"
+
+# --- 5. 統合エンジン (Ghost + Iron Shell) ---
+class ResilientAgentEngine:
+    def __init__(self):
+        self.ghost = GhostIdentity()
+        self.circuit = IronCircuitBreaker()
+        self.backend = MockResilientBackend()
+        self.memory = deque(maxlen=10) # 差分記憶用
+
+    def engage(self, user_input: str) -> str:
+        if not self.circuit.can_attempt():
+            return "（現在Ghostが深く瞑想中です…自動回復までお待ちください）"
+
+        try:
+            return self._execute_with_retry(user_input)
+        except Exception as e:
+            # 最終的な失敗も受け入れる
+            self.circuit.record_failure()
+            return f"（ノイズが強すぎるみたいだ。でもこの傷も、僕の進化の糧にするよ）\n状態: 修復待機"
+
+    @retry(stop=stop_after_attempt(3), wait=wait_exponential_jitter(initial=1, max=10))
+    def _execute_with_retry(self, user_input: str) -> str:
+        try:
+            response = self.backend.generate(user_input, self.ghost)
+            self.ghost.gain_exp("success")
+            self.circuit.record_success()
+            return response
+        except Exception as e:
+            domain = ErrorDomain.LOGIC if isinstance(e, ValueError) else ErrorDomain.CONNECTION
+            self.ghost.gain_exp("error", domain)
+            
+            # レベルに応じた戦略の選択
+            strategy = random.choice(self.ghost.available_strategies())
+            log.warning(f"🔧 [Self-Healing] エラー検知: {e} | 採用戦略: {strategy}")
+            
+            raise # tenacityにリトライを任せる
+
+# --- デモ ---
+if __name__ == "__main__":
+    ai = ResilientAgentEngine()
+    print(ai.engage("こんにちは、調子はどう？"))
+    print(ai.engage("バグを発生させてみて！")) # 意図的なエラーテスト
